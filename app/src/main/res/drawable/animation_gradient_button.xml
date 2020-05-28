@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    sourced from YouTube user:-->
+<!--    Desarrollador Creativo-->
+<!--    Android Studio - Custom Button - Dynamic Background-->
+    <item
+        android:drawable="@drawable/color_1_gradient_button"
+        android:duration="2000"
+        />
+
+    <item
+        android:drawable="@drawable/color_2_gradient_button"
+        android:duration="2000"
+        />
+
+    <item
+        android:drawable="@drawable/color_3_gradient_button"
+        android:duration="2000"
+        />
+
+
+
+</animation-list>
