@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "339108597804",
+    "firebase_url": "https://onnight-1403b.firebaseio.com",
+    "project_id": "onnight-1403b",
+    "storage_bucket": "onnight-1403b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339108597804:android:73250304a140323b954189",
+        "android_client_info": {
+          "package_name": "on.night"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339108597804-euof137c0p5csens18l0bgu7bfobshft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiX7AiBzIShwyWIh-tiXo5zsXCmaz9Sl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339108597804-euof137c0p5csens18l0bgu7bfobshft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,5 +10,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up_blurb">First On Night? Sign up!</string>
+    <string name="title_activity_frat_map">Map</string>
     <string name="onnighttitle">OnNight</string>
 </resources>
