@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item android:drawable="@drawable/on_night_1" android:duration="10" />
+    <item android:drawable="@drawable/on_night_2" android:duration="10" />
+    <item android:drawable="@drawable/on_night_3" android:duration="10" />
+    <item android:drawable="@drawable/on_night_4" android:duration="10" />
+    <item android:drawable="@drawable/on_night_5" android:duration="10" />
+    <item android:drawable="@drawable/on_night_6" android:duration="10" />
+    <item android:drawable="@drawable/on_night_7" android:duration="10" />
+    <item android:drawable="@drawable/on_night_8" android:duration="10" />
+    <item android:drawable="@drawable/on_night_9" android:duration="10" />
+    <item android:drawable="@drawable/on_night_10" android:duration="10" />
+    <item android:drawable="@drawable/on_night_11" android:duration="10" />
+    <item android:drawable="@drawable/on_night_12" android:duration="10" />
+    <item android:drawable="@drawable/on_night_13" android:duration="10" />
+    <item android:drawable="@drawable/on_night_14" android:duration="10" />
+    <item android:drawable="@drawable/on_night_15" android:duration="10" />
+    <item android:drawable="@drawable/on_night_16" android:duration="10" />
+    <item android:drawable="@drawable/on_night_17" android:duration="10" />
+    <item android:drawable="@drawable/on_night_18" android:duration="10" />
+    <item android:drawable="@drawable/on_night_19" android:duration="10" />
+    <item android:drawable="@drawable/on_night_20" android:duration="10" />
+    <item android:drawable="@drawable/on_night_21" android:duration="10" />
+    <item android:drawable="@drawable/on_night_22" android:duration="10" />
+    <item android:drawable="@drawable/on_night_23" android:duration="10" />
+    <item android:drawable="@drawable/on_night_24" android:duration="10" />
+    <item android:drawable="@drawable/on_night_25" android:duration="10" />
+    <item android:drawable="@drawable/on_night_26" android:duration="10" />
+    <item android:drawable="@drawable/on_night_27" android:duration="10" />
+    <item android:drawable="@drawable/on_night_28" android:duration="10" />
+    <item android:drawable="@drawable/on_night_29" android:duration="10" />
+    <item android:drawable="@drawable/on_night_30" android:duration="10" />
+    <item android:drawable="@drawable/on_night_31" android:duration="10" />
+    <item android:drawable="@drawable/on_night_32" android:duration="10" />
+    <item android:drawable="@drawable/on_night_33" android:duration="10" />
+    <item android:drawable="@drawable/on_night_34" android:duration="10" />
+    <item android:drawable="@drawable/on_night_35" android:duration="10" />
+    <item android:drawable="@drawable/on_night_36" android:duration="10" />
+    <item android:drawable="@drawable/on_night_37" android:duration="10" />
+    <item android:drawable="@drawable/on_night_38" android:duration="10" />
+    <item android:drawable="@drawable/on_night_39" android:duration="10" />
+    <item android:drawable="@drawable/on_night_40" android:duration="10" />
+    <item android:drawable="@drawable/on_night_41" android:duration="10" />
+    <item android:drawable="@drawable/on_night_42" android:duration="10" />
+    <item android:drawable="@drawable/on_night_43" android:duration="10" />
+    <item android:drawable="@drawable/on_night_44" android:duration="10" />
+    <item android:drawable="@drawable/on_night_45" android:duration="10" />
+    <item android:drawable="@drawable/on_night_46" android:duration="10" />
+    <item android:drawable="@drawable/on_night_47" android:duration="10" />
+    <item android:drawable="@drawable/on_night_48" android:duration="10" />
+    <item android:drawable="@drawable/on_night_49" android:duration="10" />
+    <item android:drawable="@drawable/on_night_50" android:duration="10" />
+    <item android:drawable="@drawable/on_night_51" android:duration="10" />
+    <item android:drawable="@drawable/on_night_52" android:duration="10" />
+    <item android:drawable="@drawable/on_night_53" android:duration="10" />
+    <item android:drawable="@drawable/on_night_54" android:duration="10" />
+    <item android:drawable="@drawable/on_night_55" android:duration="10" />
+    <item android:drawable="@drawable/on_night_56" android:duration="10" />
+    <item android:drawable="@drawable/on_night_57" android:duration="10" />
+    <item android:drawable="@drawable/on_night_58" android:duration="10" />
+    <item android:drawable="@drawable/on_night_59" android:duration="10" />
+    <item android:drawable="@drawable/on_night_60" android:duration="10" />
+    <item android:drawable="@drawable/on_night_61" android:duration="10" />
+    <item android:drawable="@drawable/on_night_62" android:duration="10" />
+    <item android:drawable="@drawable/on_night_63" android:duration="10" />
+    <item android:drawable="@drawable/on_night_64" android:duration="10" />
+    <item android:drawable="@drawable/on_night_65" android:duration="10" />
+    <item android:drawable="@drawable/on_night_66" android:duration="10" />
+    <item android:drawable="@drawable/on_night_67" android:duration="10" />
+    <item android:drawable="@drawable/on_night_68" android:duration="10" />
+    <item android:drawable="@drawable/on_night_69" android:duration="10" />
+    <item android:drawable="@drawable/on_night_70" android:duration="10" />
+    <item android:drawable="@drawable/on_night_71" android:duration="10" />
+    <item android:drawable="@drawable/on_night_72" android:duration="10" />
+    <item android:drawable="@drawable/on_night_73" android:duration="10" />
+    <item android:drawable="@drawable/on_night_74" android:duration="10" />
+    <item android:drawable="@drawable/on_night_75" android:duration="10" />
+    <item android:drawable="@drawable/on_night_76" android:duration="10" />
+    <item android:drawable="@drawable/on_night_77" android:duration="10" />
+    <item android:drawable="@drawable/on_night_78" android:duration="10" />
+    <item android:drawable="@drawable/on_night_79" android:duration="10" />
+    <item android:drawable="@drawable/on_night_80" android:duration="10" />
+    <item android:drawable="@drawable/on_night_81" android:duration="10" />
+    <item android:drawable="@drawable/on_night_82" android:duration="10" />
+    <item android:drawable="@drawable/on_night_83" android:duration="10" />
+    <item android:drawable="@drawable/on_night_84" android:duration="10" />
+    <item android:drawable="@drawable/on_night_85" android:duration="10" />
+    <item android:drawable="@drawable/on_night_86" android:duration="10" />
+    <item android:drawable="@drawable/on_night_87" android:duration="10" />
+    <item android:drawable="@drawable/on_night_88" android:duration="10" />
+    <item android:drawable="@drawable/on_night_89" android:duration="10" />
+    <item android:drawable="@drawable/on_night_90" android:duration="10" />
+    <item android:drawable="@drawable/on_night_91" android:duration="10" />
+    <item android:drawable="@drawable/on_night_92" android:duration="10" />
+    <item android:drawable="@drawable/on_night_93" android:duration="10" />
+    <item android:drawable="@drawable/on_night_94" android:duration="10" />
+    <item android:drawable="@drawable/on_night_95" android:duration="10" />
+    <item android:drawable="@drawable/on_night_96" android:duration="10" />
+    <item android:drawable="@drawable/on_night_97" android:duration="10" />
+    <item android:drawable="@drawable/on_night_98" android:duration="10" />
+    <item android:drawable="@drawable/on_night_99" android:duration="10" />
+    <item android:drawable="@drawable/on_night_100" android:duration="10" />
+
+
+
+
+
+
+
+
+
+</animation-list>
