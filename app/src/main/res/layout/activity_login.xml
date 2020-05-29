@@ -12,37 +12,6 @@
     android:background="@drawable/gradient_background"
     tools:context=".ui.login.LoginActivity">
 
-    <EditText
-        android:background="@android:color/transparent"
-        android:id="@+id/username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
-
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/password"
-        android:background="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <Button
         android:id="@+id/login"
@@ -63,11 +32,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.646"
-        android:clickable="true"
+        app:layout_constraintVertical_bias="0.981"
         android:onClick="onSignInClicked"
         android:focusable="true" />
-        app:layout_constraintVertical_bias="0.981" />
 
     <ProgressBar
         android:id="@+id/loading"
@@ -97,13 +64,23 @@
         app:layout_constraintVertical_bias="0.517"
         app:srcCompat="@drawable/pine" />
 
-    <ImageView
-        android:id="@+id/imageView3"
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/sleek_cup"
-        tools:layout_editor_absoluteY="-9dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="200dp"
+        tools:layout_editor_absoluteY="258dp" />
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:srcCompat="@drawable/sleek_cup"-->
+<!--        tools:layout_editor_absoluteY="-9dp" />-->
 
     <TextView
         android:id="@+id/textView2"
@@ -119,4 +96,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -29,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -50,6 +52,7 @@ import on.night.data.model.LoggedInUser;
 import on.night.ui.login.LoginViewModel;
 import on.night.ui.login.LoginViewModelFactory;
 
+import java.net.URI;
 import java.util.Objects;
 
 import on.night.R;
@@ -88,16 +91,19 @@ public class LoginActivity extends AppCompatActivity {
 //        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
 //                .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+//        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         buttonAnimation = (AnimationDrawable) loginButton.getBackground();
         buttonAnimation.setEnterFadeDuration(1700);
         buttonAnimation.setExitFadeDuration(1700);
+
+//        VideoView videoView = (VideoView) findViewById(R.id.videoView);
+//        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.onnight);
+//        videoView.setVideoURI(uri);
+//        videoView.start();
 
 
 //        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
