@@ -1,41 +1,24 @@
 package on.night.ui.login;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
 
 import androidx.annotation.RequiresApi;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -49,21 +32,13 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import on.night.R;
-import on.night.data.model.LoggedInUser;
-import on.night.ui.login.LoginViewModel;
-import on.night.ui.login.LoginViewModelFactory;
 
-import java.net.URI;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import on.night.R;
-import on.night.ui.map.FratMapActivity;
+import on.night.ui.map.TestMapActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -84,9 +59,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
+        // Remove the status bar
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Configure sign-in to request user's ID, email address, and basic profile.
         // ID and basic profile are included in Defualt sign in
@@ -209,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (a.getCurrent() != a.getFrame(a.getNumberOfFrames() - 1)) {
                     checkIfAnimationDone(a);
                 } else {
-                    Intent mapIntent = new Intent(LoginActivity.this, FratMapActivity.class);
+                    Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
                     startActivityForResult(mapIntent, REQUEST_LOGIN);
                 }
             }
