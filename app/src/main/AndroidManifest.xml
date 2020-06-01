@@ -15,14 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.map.TestMapActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
-        <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.frat.FratHomeActivity"></activity>
         <activity
-            android:name=".ui.frat.FratHomeActivity"
-            android:label="@string/title_activity_frat_home"
+            android:name=".ui.map.TestMapActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.login.LoginActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
