@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "entetered onCreate()");
         super.onCreate(savedInstanceState);
 
         // Remove the status bar
@@ -98,17 +99,37 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "entetered onStopWomp()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "entetered onDestroyWomp()");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "entetered onRestart()");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "entetered onStart()");
 //        // We check if a user is already singed in and update the UI accordingly
 //        FirebaseUser currentUser = mAuth.getCurrentUser();
 //        updateUiWithUser(currentUser);
-//    }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "entetered onActivityResult()");
 
         // Result returned from launching the intent from googleSignInClient.getSignInIntent
         if (requestCode == RC_SIGN_IN) {
@@ -193,6 +214,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "entetered onPause()");
 
         if (buttonAnimation != null && buttonAnimation.isRunning()){
             buttonAnimation.stop();
@@ -201,6 +223,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "entetered onResume()");
         super.onResume();
         if (buttonAnimation != null && !buttonAnimation.isRunning()){
             buttonAnimation.start();
