@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import on.night.R;
+import on.night.ui.map.TestMapActivity;
 
 public class StartupSplashActivity extends AppCompatActivity {
 

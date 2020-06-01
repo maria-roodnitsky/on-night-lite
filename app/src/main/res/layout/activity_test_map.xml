@@ -1,0 +1,58 @@
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.map.TestMapActivity">-->
+
+<!--&lt;!&ndash;    <com.google.android.gms.maps.MapView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/mapview"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:apiKey="AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginStart="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginLeft="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginEnd="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginRight="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginBottom="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toTopOf="parent">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    </com.google.android.gms.maps.MapView>&ndash;&gt;-->
+<!--    <WebView-->
+<!--        android:id="@+id/webview"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--    </WebView>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.androidwebviewpanoramio.MainActivity"
+        tools:ignore="MergeRootFrame"
+        android:background="#505050" />
+
+</LinearLayout>
