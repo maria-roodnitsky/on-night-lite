@@ -188,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
 
             // Play cup animation!
+            Log.d(TAG, "starting animation");
             mAnimationDrawable.start();
 
             checkIfAnimationDone(mAnimationDrawable);
@@ -202,8 +203,10 @@ public class LoginActivity extends AppCompatActivity {
         h.postDelayed(new Runnable() {
             public void run() {
                 if (a.getCurrent() != a.getFrame(a.getNumberOfFrames() - 1)) {
+                    Log.d(TAG, "stilling going, fam");
                     checkIfAnimationDone(a);
                 } else {
+                    Log.d(TAG, "animation stopping");
                     Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
                     startActivityForResult(mapIntent, REQUEST_LOGIN);
                 }
