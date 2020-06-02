@@ -72,14 +72,20 @@ public class FratHomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // if it is on, isChecked will be on, in that case, we want the database to know
                 // that the toggle for this frat is now on!
-                if (isChecked) {
-                    // TODO: Write to database that this is happening!
 
+                updateStatusDatabase(isChecked);
+                Log.d(TAG, "we stored");
 
-
-                } else {
-                    // TODO: Write to database that we are off.
-                }
+//                if (isChecked) {
+//                    // TODO: Write to database that this is happening!
+//
+//
+//
+//
+//
+//                } else {
+//                    // TODO: Write to database that we are off.
+//                }
             }
         });
 
@@ -112,9 +118,19 @@ public class FratHomeActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    /**
+     * Helper method to update database
+     * @param isChecked
+     */
+    private void updateStatusDatabase (boolean isChecked) {
+        mFratStructure.setOpenStatus(isChecked);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("GreekSpaces").child(mFratStructure.getFratName());
 
-
+        // AsyncTaskLoader to store data
+        new DatabaseFratStore(getApplicationContext()).loadInBackground();
 
     }
 
@@ -140,29 +156,31 @@ public class FratHomeActivity extends AppCompatActivity {
 
                 return new FratStructure(name, open);
             } catch (Exception e) {
-                Log.d(TAG, "Exception has occured: " + e);
+                Log.d(TAG, "Exception has occurred: " + e);
                 e.printStackTrace();
                 return null;
             }
         }
     }
 
+    /**
+     * AsyncTaskLoader for storing Frat status in the database
+     */
+    private class DatabaseFratStore extends AsyncTaskLoader<Void> {
+        public DatabaseFratStore(@NonNull Context context) {
+            super(context);
+        }
 
-//    private class DatabaseTaskLoad extends AsyncTaskLoader<ExerciseEntryStructure> {
-//
-//        public DatabaseTaskLoad(@NonNull Context context) {
-//            super(context);
-//        }
-//
-//        @Nullable
-//        @Override
-//        public ExerciseEntryStructure loadInBackground() {
-//            try {
-//                return mExerciseDataSource.fetchEntry(mEntryID);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//        }
-//    }
+        @Nullable
+        @Override
+        public Void loadInBackground() {
+            try {
+                mDatabaseReference.child("Open").setValue(mFratStructure.getOpenStatus());
+            } catch (Exception e) {
+                Log.d(TAG, "Exception occured in storing in the database!");
+            }
+            return null;
+        }
+    }
+
 }

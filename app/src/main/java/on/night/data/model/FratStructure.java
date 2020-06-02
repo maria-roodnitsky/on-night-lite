@@ -13,12 +13,8 @@ public class FratStructure {
 
     }
 
-    public void openFrat(){
-        Open = true;
-    }
-
-    public void closeFrat() {
-        Open = false;
+    public void setOpenStatus(boolean status) {
+        Open = status;
     }
 
     public boolean getOpenStatus() {
