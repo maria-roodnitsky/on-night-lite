@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,11 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import on.night.R;
 import on.night.ui.frat.FratHomeActivity;
@@ -26,8 +32,11 @@ public class FratMapActivity extends AppCompatActivity{
     public static final String USER = "user";
     private static final int REQUEST_FROM_MAP = 1;
     public static final String GREEK_SPACE = "greekspace";
+    private static final String TAG = "FratMapActivity";
     private GoogleMap map;
     private boolean isFratAdmin;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +61,10 @@ public class FratMapActivity extends AppCompatActivity{
         if (isFratAdmin) {
             fratButton.setVisibility(View.VISIBLE);
         }
+
+
+
+
 
 
 
@@ -82,7 +95,11 @@ public class FratMapActivity extends AppCompatActivity{
 //    }
 
     public static class PlaceholderFragment extends Fragment {
+        // Cloud Storage
+        private FirebaseStorage mStorage;
+
         WebView myBrowser;
+
         public PlaceholderFragment() {
 
         }
@@ -91,9 +108,21 @@ public class FratMapActivity extends AppCompatActivity{
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
             myBrowser = (WebView) rootView.findViewById(R.id.mybrowser);
-            myBrowser.loadUrl("file:///android_asset/map.html");
+
+
+            // Storage
+            mStorage = FirebaseStorage.getInstance();
+            StorageReference mapReference = mStorage.getReference().child("map.html");
+            mapReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    myBrowser.loadUrl(uri.toString());
+                }
+            });
+
+
+//            myBrowser.loadUrl("file:///android_asset/map.html");
             myBrowser.getSettings().setJavaScriptEnabled(true);
 
             return rootView;
