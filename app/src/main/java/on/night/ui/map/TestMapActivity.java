@@ -6,28 +6,40 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Placeholder;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import on.night.R;
+import on.night.ui.frat.FratHomeActivity;
+import on.night.ui.login.LoginActivity;
 
-public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCallback */{
+public class TestMapActivity extends AppCompatActivity{
 
+    public static final String USER = "user";
+    private static final int REQUEST_FROM_MAP = 1;
     private GoogleMap map;
+    private boolean isFratAdmin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_map);
+
+        //Log.d("firebase", FirebaseDatabase.getInstance().getReference("Users").toString());
 
         // Add the fragment
         if (savedInstanceState == null) {
@@ -36,6 +48,16 @@ public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCa
         }
         // Remove the status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        ///// Button for FratHomeView! //////
+        Button fratButton = findViewById(R.id.frat_button);
+        Bundle extras = getIntent().getExtras();
+        isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
+
+        if (isFratAdmin) {
+            fratButton.setVisibility(View.VISIBLE);
+        }
 
 
 
@@ -81,6 +103,14 @@ public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCa
             myBrowser.getSettings().setJavaScriptEnabled(true);
 
             return rootView;
+        }
+    }
+
+    public void onFratClick(View v) {
+        if (isFratAdmin) {
+            Intent fratIntent = new Intent(TestMapActivity.this, FratHomeActivity.class);
+            fratIntent.putExtra(USER, FirebaseAuth.getInstance().getCurrentUser().getUid());
+            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
         }
     }
 }
