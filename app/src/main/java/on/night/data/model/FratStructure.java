@@ -2,46 +2,46 @@ package on.night.data.model;
 
 public class FratStructure {
 
-    private String fratName;
-    private boolean open;
-    private FratEvent fratEvent;
+    private String Name;
+    private boolean Open;
+//    private FratEvent fratEvent;
 
-    public FratStructure(String name) {
-        fratName = name;
-        open = false;
-        fratEvent = null;
+    public FratStructure(String Name, boolean Open) {
+        this.Name = Name;
+        this.Open = Open;
+//        fratEvent = null;
 
     }
 
     public void openFrat(){
-        open = true;
+        Open = true;
     }
 
     public void closeFrat() {
-        open = false;
+        Open = false;
     }
 
     public boolean getOpenStatus() {
-        return open;
+        return Open;
     }
 
     public String getFratName() {
-        return fratName;
+        return Name;
     }
 
-    public void setFratEvent(FratEvent fratEvent) {
-        this.fratEvent = fratEvent;
-    }
+//    public void setFratEvent(FratEvent fratEvent) {
+//        this.fratEvent = fratEvent;
+//    }
 
-    public FratEvent getFratEvent() {
-        return fratEvent;
-    }
+//    public FratEvent getFratEvent() {
+//        return fratEvent;
+//    }
 
     public String toString(){
-        if (open) {
-            return fratName + " is open!";
+        if (Open) {
+            return Name + " is open!";
         } else {
-            return fratName + " is closed!";
+            return Name + " is closed!";
         }
     }
 }

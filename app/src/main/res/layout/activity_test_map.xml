@@ -4,7 +4,7 @@
 <!--    xmlns:tools="http://schemas.android.com/tools"-->
 <!--    android:layout_width="match_parent"-->
 <!--    android:layout_height="match_parent"-->
-<!--    tools:context=".ui.map.TestMapActivity">-->
+<!--    tools:context=".ui.map.FratMapActivity">-->
 
 <!--&lt;!&ndash;    <com.google.android.gms.maps.MapView&ndash;&gt;-->
 <!--&lt;!&ndash;        android:id="@+id/mapview"&ndash;&gt;-->
@@ -51,7 +51,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="on.night.ui.map.TestMapActivity"
+        tools:context="on.night.ui.map.FratMapActivity"
         tools:ignore="MergeRootFrame"
         android:background="#505050" >
 

@@ -43,7 +43,7 @@ import on.night.R;
 
 import java.util.Objects;
 
-import on.night.ui.map.TestMapActivity;
+import on.night.ui.map.FratMapActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private static final int REQUEST_LOGIN = 2;
     public static final String USER_TYPE = "usertype";
+    public static final String GREEK_SPACE = "greekspace";
     private LoginViewModel loginViewModel;
     private AnimationDrawable buttonAnimation;
     private FirebaseAuth mAuth;
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login);
 //        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
+//        Objects.requireNonNull(getSupportActionBar()).hide();
 
         buttonAnimation = (AnimationDrawable) loginButton.getBackground();
         buttonAnimation.setEnterFadeDuration(1700);
@@ -226,12 +227,14 @@ public class LoginActivity extends AppCompatActivity {
                     String uid = mAuth.getCurrentUser().getUid();
                     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
+                        Intent mapIntent = new Intent(LoginActivity.this, FratMapActivity.class);
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
                                 // Admin frat user!
                                 mapIntent.putExtra(USER_TYPE, true);
+                                Log.d(TAG, dataSnapshot.child("GreekSpace").getValue().toString());
+                                mapIntent.putExtra(GREEK_SPACE, dataSnapshot.child("GreekSpace").getValue().toString());
                             }
                             else {
                                 mapIntent.putExtra(USER_TYPE, false);
@@ -245,10 +248,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-
-//                    Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
-//                    mapIntent.putExtra(USER_TYPE, admin[0]);
-//                    startActivityForResult(mapIntent, REQUEST_LOGIN);
                 }
             }
         }, timeBetweenChecks);
