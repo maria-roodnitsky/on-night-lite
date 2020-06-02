@@ -3,31 +3,46 @@ package on.night.ui.map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Placeholder;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import on.night.R;
+import on.night.ui.frat.FratHomeActivity;
+import on.night.ui.login.LoginActivity;
 
-public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCallback */{
+public class FratMapActivity extends AppCompatActivity{
 
+    public static final String USER = "user";
+    private static final int REQUEST_FROM_MAP = 1;
+    public static final String GREEK_SPACE = "greekspace";
+    private static final String TAG = "FratMapActivity";
     private GoogleMap map;
+    private boolean isFratAdmin;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_map);
+
+        //Log.d("firebase", FirebaseDatabase.getInstance().getReference("Users").toString());
 
         // Add the fragment
         if (savedInstanceState == null) {
@@ -36,6 +51,20 @@ public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCa
         }
         // Remove the status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        ///// Button for FratHomeView! //////
+        Button fratButton = findViewById(R.id.frat_button);
+        Bundle extras = getIntent().getExtras();
+        isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
+
+        if (isFratAdmin) {
+            fratButton.setVisibility(View.VISIBLE);
+        }
+
+
+
+
 
 
 
@@ -66,7 +95,11 @@ public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCa
 //    }
 
     public static class PlaceholderFragment extends Fragment {
+        // Cloud Storage
+        private FirebaseStorage mStorage;
+
         WebView myBrowser;
+
         public PlaceholderFragment() {
 
         }
@@ -75,12 +108,32 @@ public class TestMapActivity extends AppCompatActivity /*implements OnMapReadyCa
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
             myBrowser = (WebView) rootView.findViewById(R.id.mybrowser);
-            myBrowser.loadUrl("file:///android_asset/map.html");
+
+
+            // Storage
+            mStorage = FirebaseStorage.getInstance();
+            StorageReference mapReference = mStorage.getReference().child("map.html");
+            mapReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    myBrowser.loadUrl(uri.toString());
+                }
+            });
+
+
+//            myBrowser.loadUrl("file:///android_asset/map.html");
             myBrowser.getSettings().setJavaScriptEnabled(true);
 
             return rootView;
+        }
+    }
+
+    public void onFratClick(View v) {
+        if (isFratAdmin) {
+            Intent fratIntent = new Intent(FratMapActivity.this, FratHomeActivity.class);
+            fratIntent.putExtra(GREEK_SPACE, getIntent().getStringExtra(LoginActivity.GREEK_SPACE));
+            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
         }
     }
 }

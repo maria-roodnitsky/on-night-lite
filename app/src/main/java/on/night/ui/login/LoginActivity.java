@@ -33,12 +33,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import on.night.R;
 
 import java.util.Objects;
 
-import on.night.ui.map.TestMapActivity;
+import on.night.ui.map.FratMapActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,12 +51,13 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 1;
     private static final int REQUEST_LOGIN = 2;
+    public static final String USER_TYPE = "usertype";
+    public static final String GREEK_SPACE = "greekspace";
     private LoginViewModel loginViewModel;
     private AnimationDrawable buttonAnimation;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private AnimationDrawable mAnimationDrawable;
-    private AnimationDrawableWithCallback mAnimationDrawable2;
 
 
 
@@ -86,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login);
 //        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
+//        Objects.requireNonNull(getSupportActionBar()).hide();
 
         buttonAnimation = (AnimationDrawable) loginButton.getBackground();
         buttonAnimation.setEnterFadeDuration(1700);
@@ -95,15 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         // Set up cup animation!
         ImageView cupImage = findViewById(R.id.imageView3);
         cupImage.setBackgroundResource(R.drawable.pong_login);
-//        mAnimationDrawable2  = new AnimationDrawableWithCallback((AnimationDrawable) cupImage.getBackground());
-//        mAnimationDrawable2.setAnimationFinishListener(new AnimationDrawableWithCallback.IAnimationFinishListener() {
-//            @Override
-//            public void onAnimationFinished() {
-//                Log.d(TAG, "ending animation");
-//                Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
-//                startActivityForResult(mapIntent, REQUEST_LOGIN);
-//            }
-//        });
         mAnimationDrawable = (AnimationDrawable) cupImage.getBackground();
 
 
@@ -127,14 +124,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onRestart();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "entetered onStart()");
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        Log.d(TAG, "entetered onStart()");
 //        // We check if a user is already singed in and update the UI accordingly
 //        FirebaseUser currentUser = mAuth.getCurrentUser();
 //        updateUiWithUser(currentUser);
-    }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -172,10 +169,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in Success, ipdate the UI with all of the stuff!
+                            // Sign in Success, update the UI with all of the stuff!
                             Log.d(TAG, "signInWithCredential: success");
                             Toast.makeText(LoginActivity.this, "Authentication Success!",
                                     Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUiWithUser(user);
                         } else {
@@ -191,11 +194,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void updateUiWithUser(FirebaseUser model) {
-        if (model != null) {
-            String welcome = getString(R.string.welcome) + model.getDisplayName();
+    private void updateUiWithUser(FirebaseUser user) {
+        if (user != null) {
+            String welcome = getString(R.string.welcome) + user.getDisplayName();
             // TODO : initiate successful logged in experience
             Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//            Log.d("firebase", FirebaseDatabase.getInstance().getReference("Users").getDatabase().toString());
+
 
             // Play cup animation!
             Log.d(TAG, "starting animation");
@@ -217,8 +222,32 @@ public class LoginActivity extends AppCompatActivity {
                     checkIfAnimationDone(a);
                 } else {
                     Log.d(TAG, "animation stopping");
-                    Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
-                    startActivityForResult(mapIntent, REQUEST_LOGIN);
+
+                    final boolean[] admin = {false};
+                    String uid = mAuth.getCurrentUser().getUid();
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        Intent mapIntent = new Intent(LoginActivity.this, FratMapActivity.class);
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                // Admin frat user!
+                                mapIntent.putExtra(USER_TYPE, true);
+                                Log.d(TAG, dataSnapshot.child("GreekSpace").getValue().toString());
+                                mapIntent.putExtra(GREEK_SPACE, dataSnapshot.child("GreekSpace").getValue().toString());
+                            }
+                            else {
+                                mapIntent.putExtra(USER_TYPE, false);
+                            }
+                            startActivityForResult(mapIntent, REQUEST_LOGIN);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
             }
         }, timeBetweenChecks);
