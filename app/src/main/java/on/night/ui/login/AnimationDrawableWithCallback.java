@@ -14,7 +14,7 @@ public class AnimationDrawableWithCallback extends AnimationDrawable {
 
     @Override
     public void start() {
-        Log.
+        //Log.
         super.start();
     }
 

@@ -95,16 +95,16 @@ public class LoginActivity extends AppCompatActivity {
         // Set up cup animation!
         ImageView cupImage = findViewById(R.id.imageView3);
         cupImage.setBackgroundResource(R.drawable.pong_login);
-        mAnimationDrawable2  = new AnimationDrawableWithCallback((AnimationDrawable) cupImage.getBackground());
-        mAnimationDrawable2.setAnimationFinishListener(new AnimationDrawableWithCallback.IAnimationFinishListener() {
-            @Override
-            public void onAnimationFinished() {
-                Log.d(TAG, "ending animation");
-                Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
-                startActivityForResult(mapIntent, REQUEST_LOGIN);
-            }
-        });
-//        mAnimationDrawable = (AnimationDrawable) cupImage.getBackground();
+//        mAnimationDrawable2  = new AnimationDrawableWithCallback((AnimationDrawable) cupImage.getBackground());
+//        mAnimationDrawable2.setAnimationFinishListener(new AnimationDrawableWithCallback.IAnimationFinishListener() {
+//            @Override
+//            public void onAnimationFinished() {
+//                Log.d(TAG, "ending animation");
+//                Intent mapIntent = new Intent(LoginActivity.this, TestMapActivity.class);
+//                startActivityForResult(mapIntent, REQUEST_LOGIN);
+//            }
+//        });
+        mAnimationDrawable = (AnimationDrawable) cupImage.getBackground();
 
 
     }
@@ -199,9 +199,9 @@ public class LoginActivity extends AppCompatActivity {
 
             // Play cup animation!
             Log.d(TAG, "starting animation");
-            mAnimationDrawable2.start();
+            mAnimationDrawable.start();
 
-//            checkIfAnimationDone(mAnimationDrawable);
+            checkIfAnimationDone(mAnimationDrawable);
 
         }
     }
