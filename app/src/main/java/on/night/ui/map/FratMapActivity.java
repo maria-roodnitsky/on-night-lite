@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -80,9 +81,9 @@ public class FratMapActivity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
         isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
 
-        if (isFratAdmin) {
-            fratButton.setVisibility(View.VISIBLE);
-        }
+//        if (isFratAdmin) {
+//            fratButton.setVisibility(View.VISIBLE);
+//        }
 
 
 
@@ -269,7 +270,19 @@ public class FratMapActivity extends AppCompatActivity{
 
             // Upload to cloud storage
             Uri file = Uri.fromFile(mFinalMap);
-            StorageReference mapReference =
+            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map.html");
+            UploadTask uploadTask = mapReference.putFile(file);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, "Upload was successful!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Upload was unsuccessful");
+                }
+            });
 
         }
 

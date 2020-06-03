@@ -51,6 +51,9 @@ public class FratHomeActivity extends AppCompatActivity {
 
         // TODO: Look into FCM.
 
+        // Remove the status bar
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         // Get our extras from intent
         Bundle extras = getIntent().getExtras();
 
@@ -66,8 +69,6 @@ public class FratHomeActivity extends AppCompatActivity {
 
         loadCurrentStatus();
         // Frat Title and Current Status Update
-
-
 
         // On Switch Listener
         mOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

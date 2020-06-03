@@ -15,20 +15,31 @@
 
         <Button
             android:id="@+id/frat_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="end"
-            android:visibility="gone"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_home"
             android:onClick="onFratClick"
-            android:background="@drawable/ic_ball"
-            android:text="@string/Frat"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/refresh"
-            android:onClick="onRefreshClick">
+            android:visibility="visible"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
 
-        </Button>
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_refresh"
+            android:onClick="onRefreshClick"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
 
     </FrameLayout>
 
