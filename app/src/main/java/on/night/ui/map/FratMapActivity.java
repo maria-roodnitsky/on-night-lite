@@ -223,7 +223,8 @@ public class FratMapActivity extends AppCompatActivity{
                         // Grab our values to create a new FratStructure
                         String name = (String) snapshot.child("Name").getValue();
                         boolean open = (boolean) snapshot.child("Open").getValue();
-                        fratStructures.add(new FratStructure(name, open));
+                        String nickname = (String) snapshot.child("Nickname").getValue();
+                        fratStructures.add(new FratStructure(name, open, nickname));
                     }
                     return fratStructures;
                 } catch (Exception e) {
