@@ -85,7 +85,6 @@ public class FratMapActivity extends AppCompatActivity{
             fratButton.setVisibility(View.VISIBLE);
         }
 
-
     }
 
     public void onRefreshClick(View v) {
@@ -127,21 +126,22 @@ public class FratMapActivity extends AppCompatActivity{
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             myBrowser = (WebView) rootView.findViewById(R.id.mybrowser);
+            myBrowser.loadUrl("https://onnight-1403b.web.app/");
 
 
-            // Storage
-            mStorage = FirebaseStorage.getInstance();
-            StorageReference mapReference = mStorage.getReference().child("map.html");
-            mapReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    myBrowser.loadUrl(uri.toString());
-                }
-            });
-
-
-
-            getUpdates();
+//            // Storage
+//            mStorage = FirebaseStorage.getInstance();
+//            StorageReference mapReference = mStorage.getReference().child("map.html");
+//            mapReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//                    myBrowser.loadUrl(uri.toString());
+//                }
+//            });
+//
+//
+//
+//            getUpdates();
 
 
             myBrowser.getSettings().setJavaScriptEnabled(true);
@@ -269,7 +269,7 @@ public class FratMapActivity extends AppCompatActivity{
 
             // Upload to cloud storage
             Uri file = Uri.fromFile(mFinalMap);
-            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map2.html");
+            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map.html");
             UploadTask uploadTask = mapReference.putFile(file);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
