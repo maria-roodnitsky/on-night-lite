@@ -74,9 +74,9 @@ public class FratMapActivity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
         isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
 
-        if (isFratAdmin) {
-            fratButton.setVisibility(View.VISIBLE);
-        }
+//        if (isFratAdmin) {
+//            fratButton.setVisibility(View.VISIBLE);
+//        }
 
 
 
