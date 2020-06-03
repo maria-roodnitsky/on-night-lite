@@ -85,9 +85,6 @@ public class FratMapActivity extends AppCompatActivity{
             fratButton.setVisibility(View.VISIBLE);
         }
 
-
-
-
     }
 
     public void onSignOutClicked(View v) {
