@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.loader.content.AsyncTaskLoader;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,13 +20,23 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import on.night.R;
+import on.night.data.model.FratStructure;
 import on.night.ui.frat.FratHomeActivity;
 import on.night.ui.login.LoginActivity;
 
@@ -35,6 +48,8 @@ public class FratMapActivity extends AppCompatActivity{
     private static final String TAG = "FratMapActivity";
     private GoogleMap map;
     private boolean isFratAdmin;
+    private PlaceholderFragment placeholderFragment;
+
 
 
     @Override
@@ -45,9 +60,10 @@ public class FratMapActivity extends AppCompatActivity{
         //Log.d("firebase", FirebaseDatabase.getInstance().getReference("Users").toString());
 
         // Add the fragment
+        placeholderFragment = new PlaceholderFragment();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container,
-                    new PlaceholderFragment()).commit();
+                    placeholderFragment).commit();
         }
         // Remove the status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -78,6 +94,13 @@ public class FratMapActivity extends AppCompatActivity{
 
     }
 
+    public void onRefreshClick(View v) {
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(placeholderFragment);
+        ft.attach(placeholderFragment);
+        ft.commit();
+    }
+
 //    @Override
 //    public void onMapReady(GoogleMap googleMap) {
 //        map = googleMap;
@@ -97,6 +120,8 @@ public class FratMapActivity extends AppCompatActivity{
     public static class PlaceholderFragment extends Fragment {
         // Cloud Storage
         private FirebaseStorage mStorage;
+        private DatabaseReference mDatabaseReference;
+        private ArrayList<FratStructure> mFratStructures;
 
         WebView myBrowser;
 
@@ -121,12 +146,103 @@ public class FratMapActivity extends AppCompatActivity{
                 }
             });
 
+            try {
+                downloadMap();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-//            myBrowser.loadUrl("file:///android_asset/map.html");
+            getUpdates();
+
+
             myBrowser.getSettings().setJavaScriptEnabled(true);
 
             return rootView;
         }
+
+        /**
+         * Downloads map.html from the cloud storage
+         */
+        public void downloadMap() throws IOException {
+            mStorage = FirebaseStorage.getInstance();
+            StorageReference mapReference = mStorage.getReference().child("map.html");
+            //            myBrowser.loadUrl("file:///android_asset/map.html");
+
+            // Store in a local file
+            final File localMap = File.createTempFile("map", ".html");
+
+            mapReference.getFile(localMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, localMap.getAbsolutePath());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "download has f a i l e d!");
+                }
+            });
+        }
+
+        /**
+         *
+         */
+        public void getUpdates() {
+            // Get the database
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("GreekSpaces");
+
+            mDatabaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Create our AsyncTaskLoader
+                    DatabaseMapLoad databaseMapLoad = new DatabaseMapLoad(getContext(), dataSnapshot);
+                    mFratStructures = databaseMapLoad.loadInBackground();
+                    Log.d(TAG, mFratStructures.toString());
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        private class DatabaseMapLoad extends AsyncTaskLoader<ArrayList<FratStructure>> {
+            // DataSnapshot for obtaining the data from database
+            DataSnapshot dataSnapshot;
+            public DatabaseMapLoad(Context context, DataSnapshot dataSnapshot) {
+                super(context);
+                this.dataSnapshot = dataSnapshot;
+            }
+
+            @Nullable
+            @Override
+            public ArrayList<FratStructure> loadInBackground() {
+                try {
+                    Log.d(TAG, "" + dataSnapshot);
+                    ArrayList<FratStructure> fratStructures = new ArrayList<>();
+                    // Iterate through the frats,
+                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                        // Grab our values to create a new FratStructure
+                        String name = (String) snapshot.child("Name").getValue();
+                        boolean open = (boolean) snapshot.child("Open").getValue();
+                        fratStructures.add(new FratStructure(name, open));
+                    }
+                    return fratStructures;
+                } catch (Exception e) {
+                    Log.d(TAG, "Exception has occurred: " + e);
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+
+
+
+
+
     }
 
     public void onFratClick(View v) {
@@ -136,4 +252,10 @@ public class FratMapActivity extends AppCompatActivity{
             startActivityForResult(fratIntent, REQUEST_FROM_MAP);
         }
     }
+
+
+
+
+
+
 }
