@@ -80,18 +80,6 @@ public class FratMapActivity extends AppCompatActivity{
 
 
 
-
-
-
-
-//        MapView mapView = findViewById(R.id.mapview);
-//        mapView.onCreate(savedInstanceState);
-//        mapView.getMapAsync(this);
-
-//        WebView webView = findViewById(R.id.webview);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("https://www.google.com/maps/@38.8864259,-77.2896729,15z");
-
     }
 
     public void onRefreshClick(View v) {
@@ -101,27 +89,24 @@ public class FratMapActivity extends AppCompatActivity{
         ft.commit();
     }
 
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        map = googleMap;
-//        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(43.1, -87.9)));
-//
-//    }
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.main);
-//
-//        WebView webView = (WebView) findViewById(R.id.mywebview);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("http://maps.googleapis.com/maps/api/staticmap?
-//                ll=36.97,%20-122&lci=bike&z=13&t=p&size=500x500&sensor=true");
-//    }
+    public void onFratClick(View v) {
+        if (isFratAdmin) {
+            Intent fratIntent = new Intent(FratMapActivity.this, FratHomeActivity.class);
+            fratIntent.putExtra(GREEK_SPACE, getIntent().getStringExtra(LoginActivity.GREEK_SPACE));
+            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
+        }
+    }
+
+
+
+
 
     public static class PlaceholderFragment extends Fragment {
         // Cloud Storage
         private FirebaseStorage mStorage;
         private DatabaseReference mDatabaseReference;
         private ArrayList<FratStructure> mFratStructures;
+        private File mLocalMap;
 
         WebView myBrowser;
 
@@ -146,11 +131,7 @@ public class FratMapActivity extends AppCompatActivity{
                 }
             });
 
-            try {
-                downloadMap();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
 
             getUpdates();
 
@@ -169,12 +150,12 @@ public class FratMapActivity extends AppCompatActivity{
             //            myBrowser.loadUrl("file:///android_asset/map.html");
 
             // Store in a local file
-            final File localMap = File.createTempFile("map", ".html");
+            mLocalMap = File.createTempFile("map", ".html");
 
-            mapReference.getFile(localMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            mapReference.getFile(mLocalMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d(TAG, localMap.getAbsolutePath());
+                    Log.d(TAG, mLocalMap.getAbsolutePath());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -185,7 +166,8 @@ public class FratMapActivity extends AppCompatActivity{
         }
 
         /**
-         *
+         * Gets a list of FratStructures that need to be updated. This will be parsed into javascript
+         * code that will be used to create the map.
          */
         public void getUpdates() {
             // Get the database
@@ -206,6 +188,19 @@ public class FratMapActivity extends AppCompatActivity{
 
                 }
             });
+
+            // Now we download the map and
+            try {
+                downloadMap();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // If our localMap is not null, then we can change up our map
+
+
+
+
 
         }
 
@@ -243,14 +238,6 @@ public class FratMapActivity extends AppCompatActivity{
 
 
 
-    }
-
-    public void onFratClick(View v) {
-        if (isFratAdmin) {
-            Intent fratIntent = new Intent(FratMapActivity.this, FratHomeActivity.class);
-            fratIntent.putExtra(GREEK_SPACE, getIntent().getStringExtra(LoginActivity.GREEK_SPACE));
-            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
-        }
     }
 
 
