@@ -54,16 +54,17 @@ public class FratHomeActivity extends AppCompatActivity {
 
         // Sets up database
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFratStructure = new FratStructure(extras.getString(FratMapActivity.GREEK_SPACE), false);
+        mFratStructure = new FratStructure(extras.getString(FratMapActivity.GREEK_SPACE), false,
+                extras.getString(FratMapActivity.GREEK_SPACE));
 
         // Grab views
         mFratTitle = findViewById(R.id.frat_title);
         mOnSwitch = findViewById(R.id.on_switch);
 
 
-        // Frat Title and Current Status Update
-        mFratTitle.setText(mFratStructure.getFratName());
         loadCurrentStatus();
+        // Frat Title and Current Status Update
+
 
 
         // On Switch Listener
@@ -110,6 +111,8 @@ public class FratHomeActivity extends AppCompatActivity {
 
                 // Now that mFratStructure has been updated, let us quickly update our switch.
                 mOnSwitch.setChecked(mFratStructure.getOpenStatus());
+                Log.d("nickname", mFratStructure.getFratNickname());
+                mFratTitle.setText(mFratStructure.getFratNickname());
 
             }
 
@@ -153,8 +156,9 @@ public class FratHomeActivity extends AppCompatActivity {
                 // Grab our values to create a new FratStructure
                 String name = (String) dataSnapshot.child("Name").getValue();
                 boolean open = (boolean) dataSnapshot.child("Open").getValue();
+                String nickname = (String) dataSnapshot.child("Nickname").getValue();
 
-                return new FratStructure(name, open);
+                return new FratStructure(name, open, nickname);
             } catch (Exception e) {
                 Log.d(TAG, "Exception has occurred: " + e);
                 e.printStackTrace();
