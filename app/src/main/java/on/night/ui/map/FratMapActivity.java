@@ -30,13 +30,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import on.night.R;
 import on.night.data.model.FratStructure;
+import on.night.data.model.MapToJavascriptStructure;
 import on.night.ui.frat.FratHomeActivity;
 import on.night.ui.login.LoginActivity;
 
@@ -74,23 +81,11 @@ public class FratMapActivity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
         isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
 
-//        if (isFratAdmin) {
-//            fratButton.setVisibility(View.VISIBLE);
-//        }
+        if (isFratAdmin) {
+            fratButton.setVisibility(View.VISIBLE);
+        }
 
 
-
-
-
-
-
-//        MapView mapView = findViewById(R.id.mapview);
-//        mapView.onCreate(savedInstanceState);
-//        mapView.getMapAsync(this);
-
-//        WebView webView = findViewById(R.id.webview);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("https://www.google.com/maps/@38.8864259,-77.2896729,15z");
 
     }
 
@@ -101,27 +96,26 @@ public class FratMapActivity extends AppCompatActivity{
         ft.commit();
     }
 
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        map = googleMap;
-//        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(43.1, -87.9)));
-//
-//    }
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.main);
-//
-//        WebView webView = (WebView) findViewById(R.id.mywebview);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("http://maps.googleapis.com/maps/api/staticmap?
-//                ll=36.97,%20-122&lci=bike&z=13&t=p&size=500x500&sensor=true");
-//    }
+    public void onFratClick(View v) {
+        if (isFratAdmin) {
+            Intent fratIntent = new Intent(FratMapActivity.this, FratHomeActivity.class);
+            fratIntent.putExtra(GREEK_SPACE, getIntent().getStringExtra(LoginActivity.GREEK_SPACE));
+            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
+        }
+    }
+
+
+
+
 
     public static class PlaceholderFragment extends Fragment {
         // Cloud Storage
         private FirebaseStorage mStorage;
         private DatabaseReference mDatabaseReference;
         private ArrayList<FratStructure> mFratStructures;
+        private File mLocalMap;
+        private File mFinalMap;
+        private MapToJavascriptStructure mapToJavascriptStructure;
 
         WebView myBrowser;
 
@@ -146,11 +140,7 @@ public class FratMapActivity extends AppCompatActivity{
                 }
             });
 
-            try {
-                downloadMap();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
 
             getUpdates();
 
@@ -165,16 +155,25 @@ public class FratMapActivity extends AppCompatActivity{
          */
         public void downloadMap() throws IOException {
             mStorage = FirebaseStorage.getInstance();
-            StorageReference mapReference = mStorage.getReference().child("map.html");
+            StorageReference mapReference = mStorage.getReference().child("templateMap.html");
             //            myBrowser.loadUrl("file:///android_asset/map.html");
 
             // Store in a local file
-            final File localMap = File.createTempFile("map", ".html");
+            mLocalMap = File.createTempFile("map", ".html");
 
-            mapReference.getFile(localMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            mapReference.getFile(mLocalMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d(TAG, localMap.getAbsolutePath());
+                    Log.d(TAG, mLocalMap.getAbsolutePath());
+                    // Create the Map Structure that will be turned to javascript
+                    createMapStructure();
+                    // Now make the new file
+                    try {
+                        createNewMap();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -182,10 +181,13 @@ public class FratMapActivity extends AppCompatActivity{
                     Log.d(TAG, "download has f a i l e d!");
                 }
             });
+
+
         }
 
         /**
-         *
+         * Gets a list of FratStructures that need to be updated. This will be parsed into javascript
+         * code that will be used to create the map.
          */
         public void getUpdates() {
             // Get the database
@@ -198,12 +200,87 @@ public class FratMapActivity extends AppCompatActivity{
                     DatabaseMapLoad databaseMapLoad = new DatabaseMapLoad(getContext(), dataSnapshot);
                     mFratStructures = databaseMapLoad.loadInBackground();
                     Log.d(TAG, mFratStructures.toString());
+                    // Download the template map
+                    try {
+                        downloadMap();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
 
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
+        }
+
+        public void createMapStructure() {
+            mapToJavascriptStructure = new MapToJavascriptStructure();
+            for (FratStructure fratStructure : mFratStructures) {
+                mapToJavascriptStructure.setValue(fratStructure.getFratNickname(), fratStructure.getOpenStatus());
+            }
+            Log.d(TAG, "MAPSTRUCTURE" + mapToJavascriptStructure.toString());
+        }
+
+        public void createNewMap() throws IOException {
+            // Readers and Writers
+            BufferedReader reader = null;
+            BufferedWriter writer = null;
+
+            try {
+                mFinalMap = File.createTempFile("finalMap", ".html");
+            } catch (IOException e) {
+                Log.d(TAG, "Unable to create final map file");
+            }
+            try {
+                reader = new BufferedReader(new FileReader(mLocalMap));
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "Temporary file was not found!");
+            }
+            if (reader == null) {
+                Log.d(TAG, "our reader is null");
+            }
+            try {
+                writer = new BufferedWriter(new FileWriter(mFinalMap));
+            } catch (IOException e) {
+                Log.d(TAG, "Unable to create a Buffered Writer");
+            }
+
+            String line = "";
+            // Now read html till you find the place to insert javascript
+            while (!(line = reader.readLine()).equals("            // MAP CONSTRUCTION HERE")) {
+                writer.write(line + "\n");
+            }
+            writer.write(line + "\n");
+
+            // Insert the javascript
+            writer.write(mapToJavascriptStructure.toString() + "\n");
+
+            // Rest of the file
+            while ((line = reader.readLine()) != null) {
+                writer.write(line + "\n");
+            }
+            // Close the writer and reader
+            reader.close();
+            writer.close();
+
+            // Upload to cloud storage
+            Uri file = Uri.fromFile(mFinalMap);
+            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map2.html");
+            UploadTask uploadTask = mapReference.putFile(file);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, "Upload was successful!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Upload was unsuccessful");
                 }
             });
 
@@ -244,14 +321,6 @@ public class FratMapActivity extends AppCompatActivity{
 
 
 
-    }
-
-    public void onFratClick(View v) {
-        if (isFratAdmin) {
-            Intent fratIntent = new Intent(FratMapActivity.this, FratHomeActivity.class);
-            fratIntent.putExtra(GREEK_SPACE, getIntent().getStringExtra(LoginActivity.GREEK_SPACE));
-            startActivityForResult(fratIntent, REQUEST_FROM_MAP);
-        }
     }
 
 
