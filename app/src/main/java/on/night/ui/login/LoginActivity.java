@@ -171,8 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in Success, update the UI with all of the stuff!
                             Log.d(TAG, "signInWithCredential: success");
-                            Toast.makeText(LoginActivity.this, "Authentication Success!",
-                                    Toast.LENGTH_SHORT).show();
+
 
 
 
@@ -184,8 +183,6 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, well thats a big womp.
                             Log.w(TAG, "signInWithCredential: failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication Womp",
-                                    Toast.LENGTH_SHORT).show();
                             updateUiWithUser(null);
 
                         }
@@ -198,7 +195,6 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             String welcome = getString(R.string.welcome) + user.getDisplayName();
             // TODO : initiate successful logged in experience
-            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
 //            Log.d("firebase", FirebaseDatabase.getInstance().getReference("Users").getDatabase().toString());
 
 
