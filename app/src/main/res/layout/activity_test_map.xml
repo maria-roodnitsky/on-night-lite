@@ -1,13 +1,10 @@
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-
+    android:orientation="vertical" >
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -15,34 +12,36 @@
         tools:context="on.night.ui.map.FratMapActivity"
         tools:ignore="MergeRootFrame"
         android:background="#505050" >
+
+        <Button
+            android:id="@+id/frat_button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="140dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/dynamic_home"
+            android:onClick="onFratClick"
+            android:visibility="invisible"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/dynamic_refresh"
+            android:onClick="onRefreshClick"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
     </FrameLayout>
 
-    <Button
-        android:id="@+id/frat_button"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/dynamic_home"
-        android:onClick="onFratClick"
-        android:visibility="invisible"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
-
-    <Button
-        android:id="@+id/refresh_button"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/dynamic_refresh"
-        android:onClick="onRefreshClick"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
+</LinearLayout>
 
 
-</RelativeLayout>
