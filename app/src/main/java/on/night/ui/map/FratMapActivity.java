@@ -87,11 +87,10 @@ public class FratMapActivity extends AppCompatActivity{
 
     }
 
-    public void onRefreshClick(View v) {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.detach(placeholderFragment);
-        ft.attach(placeholderFragment);
-        ft.commit();
+    public void onSignOutClicked(View v) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void onFratClick(View v) {
@@ -129,194 +128,10 @@ public class FratMapActivity extends AppCompatActivity{
             myBrowser.loadUrl("https://onnight-1403b.web.app/");
 
 
-//            // Storage
-//            mStorage = FirebaseStorage.getInstance();
-//            StorageReference mapReference = mStorage.getReference().child("map.html");
-//            mapReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    myBrowser.loadUrl(uri.toString());
-//                }
-//            });
-//
-//
-//
-//            getUpdates();
-
-
             myBrowser.getSettings().setJavaScriptEnabled(true);
 
             return rootView;
         }
-
-        /**
-         * Downloads map.html from the cloud storage
-         */
-        public void downloadMap() throws IOException {
-            mStorage = FirebaseStorage.getInstance();
-            StorageReference mapReference = mStorage.getReference().child("templateMap.html");
-            //            myBrowser.loadUrl("file:///android_asset/map.html");
-
-            // Store in a local file
-            mLocalMap = File.createTempFile("map", ".html");
-
-            mapReference.getFile(mLocalMap).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d(TAG, mLocalMap.getAbsolutePath());
-                    // Create the Map Structure that will be turned to javascript
-                    createMapStructure();
-                    // Now make the new file
-                    try {
-                        createNewMap();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "download has f a i l e d!");
-                }
-            });
-
-
-        }
-
-        /**
-         * Gets a list of FratStructures that need to be updated. This will be parsed into javascript
-         * code that will be used to create the map.
-         */
-        public void getUpdates() {
-            // Get the database
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("GreekSpaces");
-
-            mDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Create our AsyncTaskLoader
-                    DatabaseMapLoad databaseMapLoad = new DatabaseMapLoad(getContext(), dataSnapshot);
-                    mFratStructures = databaseMapLoad.loadInBackground();
-                    Log.d(TAG, mFratStructures.toString());
-                    // Download the template map
-                    try {
-                        downloadMap();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        public void createMapStructure() {
-            mapToJavascriptStructure = new MapToJavascriptStructure();
-            for (FratStructure fratStructure : mFratStructures) {
-                mapToJavascriptStructure.setValue(fratStructure.getFratNickname(), fratStructure.getOpenStatus());
-            }
-            Log.d(TAG, "MAPSTRUCTURE" + mapToJavascriptStructure.toString());
-        }
-
-        public void createNewMap() throws IOException {
-            // Readers and Writers
-            BufferedReader reader = null;
-            BufferedWriter writer = null;
-
-            try {
-                mFinalMap = File.createTempFile("finalMap", ".html");
-            } catch (IOException e) {
-                Log.d(TAG, "Unable to create final map file");
-            }
-            try {
-                reader = new BufferedReader(new FileReader(mLocalMap));
-            } catch (FileNotFoundException e) {
-                Log.d(TAG, "Temporary file was not found!");
-            }
-            if (reader == null) {
-                Log.d(TAG, "our reader is null");
-            }
-            try {
-                writer = new BufferedWriter(new FileWriter(mFinalMap));
-            } catch (IOException e) {
-                Log.d(TAG, "Unable to create a Buffered Writer");
-            }
-
-            String line = "";
-            // Now read html till you find the place to insert javascript
-            while (!(line = reader.readLine()).equals("            // MAP CONSTRUCTION HERE")) {
-                writer.write(line + "\n");
-            }
-            writer.write(line + "\n");
-
-            // Insert the javascript
-            writer.write(mapToJavascriptStructure.toString() + "\n");
-
-            // Rest of the file
-            while ((line = reader.readLine()) != null) {
-                writer.write(line + "\n");
-            }
-            // Close the writer and reader
-            reader.close();
-            writer.close();
-
-            // Upload to cloud storage
-            Uri file = Uri.fromFile(mFinalMap);
-            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map.html");
-            UploadTask uploadTask = mapReference.putFile(file);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.d(TAG, "Upload was successful!");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Upload was unsuccessful");
-                }
-            });
-
-        }
-
-        private class DatabaseMapLoad extends AsyncTaskLoader<ArrayList<FratStructure>> {
-            // DataSnapshot for obtaining the data from database
-            DataSnapshot dataSnapshot;
-            public DatabaseMapLoad(Context context, DataSnapshot dataSnapshot) {
-                super(context);
-                this.dataSnapshot = dataSnapshot;
-            }
-
-            @Nullable
-            @Override
-            public ArrayList<FratStructure> loadInBackground() {
-                try {
-                    Log.d(TAG, "" + dataSnapshot);
-                    ArrayList<FratStructure> fratStructures = new ArrayList<>();
-                    // Iterate through the frats,
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                        // Grab our values to create a new FratStructure
-                        String name = (String) snapshot.child("Name").getValue();
-                        boolean open = (boolean) snapshot.child("Open").getValue();
-                        String nickname = (String) snapshot.child("Nickname").getValue();
-                        fratStructures.add(new FratStructure(name, open, nickname));
-                    }
-                    return fratStructures;
-                } catch (Exception e) {
-                    Log.d(TAG, "Exception has occurred: " + e);
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        }
-
-
 
 
 
