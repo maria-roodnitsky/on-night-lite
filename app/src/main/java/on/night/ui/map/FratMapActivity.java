@@ -81,9 +81,9 @@ public class FratMapActivity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
         isFratAdmin = extras.getBoolean(LoginActivity.USER_TYPE);
 
-//        if (isFratAdmin) {
-//            fratButton.setVisibility(View.VISIBLE);
-//        }
+        if (isFratAdmin) {
+            fratButton.setVisibility(View.VISIBLE);
+        }
 
 
 
@@ -270,7 +270,7 @@ public class FratMapActivity extends AppCompatActivity{
 
             // Upload to cloud storage
             Uri file = Uri.fromFile(mFinalMap);
-            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map.html");
+            StorageReference mapReference = FirebaseStorage.getInstance().getReference().child("map2.html");
             UploadTask uploadTask = mapReference.putFile(file);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
