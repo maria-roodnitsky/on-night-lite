@@ -31,12 +31,18 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import on.night.R;
 import on.night.data.model.FratStructure;
+import on.night.data.model.MapToJavascriptStructure;
 import on.night.ui.frat.FratHomeActivity;
 import on.night.ui.login.LoginActivity;
 
@@ -107,6 +113,8 @@ public class FratMapActivity extends AppCompatActivity{
         private DatabaseReference mDatabaseReference;
         private ArrayList<FratStructure> mFratStructures;
         private File mLocalMap;
+        private File mFinalMap;
+        private MapToJavascriptStructure mapToJavascriptStructure;
 
         WebView myBrowser;
 
@@ -146,7 +154,7 @@ public class FratMapActivity extends AppCompatActivity{
          */
         public void downloadMap() throws IOException {
             mStorage = FirebaseStorage.getInstance();
-            StorageReference mapReference = mStorage.getReference().child("map.html");
+            StorageReference mapReference = mStorage.getReference().child("templateMap.html");
             //            myBrowser.loadUrl("file:///android_asset/map.html");
 
             // Store in a local file
@@ -156,6 +164,15 @@ public class FratMapActivity extends AppCompatActivity{
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Log.d(TAG, mLocalMap.getAbsolutePath());
+                    // Create the Map Structure that will be turned to javascript
+                    createMapStructure();
+                    // Now make the new file
+                    try {
+                        createNewMap();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -163,6 +180,8 @@ public class FratMapActivity extends AppCompatActivity{
                     Log.d(TAG, "download has f a i l e d!");
                 }
             });
+
+
         }
 
         /**
@@ -180,6 +199,14 @@ public class FratMapActivity extends AppCompatActivity{
                     DatabaseMapLoad databaseMapLoad = new DatabaseMapLoad(getContext(), dataSnapshot);
                     mFratStructures = databaseMapLoad.loadInBackground();
                     Log.d(TAG, mFratStructures.toString());
+                    // Download the template map
+                    try {
+                        downloadMap();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
 
                 }
 
@@ -188,19 +215,61 @@ public class FratMapActivity extends AppCompatActivity{
 
                 }
             });
+        }
 
-            // Now we download the map and
+        public void createMapStructure() {
+            mapToJavascriptStructure = new MapToJavascriptStructure();
+            for (FratStructure fratStructure : mFratStructures) {
+                mapToJavascriptStructure.setValue(fratStructure.getFratNickname(), fratStructure.getOpenStatus());
+            }
+            Log.d(TAG, "MAPSTRUCTURE" + mapToJavascriptStructure.toString());
+        }
+
+        public void createNewMap() throws IOException {
+            // Readers and Writers
+            BufferedReader reader = null;
+            BufferedWriter writer = null;
+
             try {
-                downloadMap();
+                mFinalMap = File.createTempFile("finalMap", ".html");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(TAG, "Unable to create final map file");
+            }
+            try {
+                reader = new BufferedReader(new FileReader(mLocalMap));
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "Temporary file was not found!");
+            }
+            if (reader == null) {
+                Log.d(TAG, "our reader is null");
+            }
+            try {
+                writer = new BufferedWriter(new FileWriter(mFinalMap));
+            } catch (IOException e) {
+                Log.d(TAG, "Unable to create a Buffered Writer");
             }
 
-            // If our localMap is not null, then we can change up our map
+            String line = "";
+            // Now read html till you find the place to insert javascript
+            while (!(line = reader.readLine()).equals("            // MAP CONSTRUCTION HERE")) {
+                writer.write(line + "\n");
+            }
+            writer.write(line + "\n");
 
+            // Insert the javascript
+            writer.write(mapToJavascriptStructure.toString() + "\n");
 
+            // Rest of the file
+            while ((line = reader.readLine()) != null) {
+                writer.write(line + "\n");
+            }
+            // Close the writer and reader
+            reader.close();
+            writer.close();
 
-
+            // Upload to cloud storage
+            Uri file = Uri.fromFile(mFinalMap);
+            StorageReference mapReference =
 
         }
 
