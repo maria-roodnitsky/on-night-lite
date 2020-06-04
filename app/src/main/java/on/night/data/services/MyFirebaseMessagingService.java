@@ -1,12 +1,14 @@
 package on.night.data.services;
 
+// Import statements
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+/**
+ * Messaging Service that will be used with Firebase Messaging Cloud
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";

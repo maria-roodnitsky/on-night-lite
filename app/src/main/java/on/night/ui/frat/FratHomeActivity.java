@@ -1,5 +1,6 @@
 package on.night.ui.frat;
 
+// Import statements
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,9 @@ import on.night.data.model.FratStructure;
 import on.night.ui.login.LoginActivity;
 import on.night.ui.map.FratMapActivity;
 
+/**
+ * FratHomeActivity for frat admins to open/close their frats.
+ */
 public class FratHomeActivity extends AppCompatActivity {
 
     // Tag
@@ -43,6 +47,10 @@ public class FratHomeActivity extends AppCompatActivity {
     // Frat Structure
     private FratStructure mFratStructure;
 
+    /**
+     * Creates the frat home view with a button and the frat/sorority name
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,25 +84,10 @@ public class FratHomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // if it is on, isChecked will be on, in that case, we want the database to know
                 // that the toggle for this frat is now on!
-
                 updateStatusDatabase(isChecked);
                 Log.d(TAG, "we stored");
-
-//                if (isChecked) {
-//                    // TODO: Write to database that this is happening!
-//
-//
-//
-//
-//
-//                } else {
-//                    // TODO: Write to database that we are off.
-//                }
             }
         });
-
-
-
     }
 
 
@@ -116,12 +109,10 @@ public class FratHomeActivity extends AppCompatActivity {
                 mOnSwitch.setChecked(mFratStructure.getOpenStatus());
                 Log.d("nickname", mFratStructure.getFratNickname());
                 mFratTitle.setText(mFratStructure.getFratNickname());
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -182,6 +173,7 @@ public class FratHomeActivity extends AppCompatActivity {
         @Override
         public Void loadInBackground() {
             try {
+                // Sets the open status
                 mDatabaseReference.child("Open").setValue(mFratStructure.getOpenStatus());
             } catch (Exception e) {
                 Log.d(TAG, "Exception occured in storing in the database!");
